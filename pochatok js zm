@@ -1,0 +1,73 @@
+<html> 
+<head> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/j.."></script> 
+</head> 
+<body> 
+
+<div id="container"></div> 
+
+<style> 
+#container { 
+width: 450px; 
+height: 450px; 
+border: 1px solid black; 
+position: relative; 
+} 
+.snake { 
+width: 5px; 
+height: 5px; 
+background: black; 
+position: absolute; 
+} 
+</style> 
+
+<script> 
+var PIXEL_SIZE = 5; 
+
+function Snake ($container) { 
+var x = 0 , y = 0; 
+var vx = 1, vy = 0; 
+
+var $snake = $("<div class='snake' />"); 
+$snake.appendTo($container); 
+
+return{ 
+update: function () { 
+x += vx; 
+y += vy; 
+if (x < 0) x = 0; 
+if (y < 0) y = 0; 
+if (x * PIXEL_SIZE + PIXEL_SIZE > $container.innerWidth()) X = 0; 
+$snake.css({ 
+left: x * PIXEL_SIZE, 
+top: y * PIXEL_SIZE, 
+}); 
+}, 
+
+direct: function (_vx, _vy){ 
+vx = _vx; 
+vy = _vy; 
+} 
+}; 
+} 
+
+$(function () { 
+var $container = $("#container"); 
+var snake = Snake($container); 
+
+setInterval(function () { 
+snake.update(); 
+}, 50); 
+
+$(document.body).on("keydown", function (e) { 
+switch (e.which) { 
+case 38: snake.direct(0, -1); break; // up 
+case 40: snake.direct(0, 1); break; // down 
+case 37: snake.direct(-1, 0); break; // left 
+case 39: snake.direct(1, 0); break; // right 
+} 
+}); 
+}); 
+</script> 
+</html> 
+</body>
