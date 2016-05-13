@@ -1,12 +1,88 @@
 <!DOCTYPE html>
-	<html>
-	 <head>
-	    <meta charset="utf-8">
-	   <title>ZMEJKA</title>
-	 </head>
-	<body>
-	  <h1>Snake game</h2>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>ZMEIKA</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
+
+<body>
 	  <p>It's our first project</p>
-	  <p>That called "ZMEJKA"</P>
+	  <p>That called "ZMEIKA"</P>
+	  <script>
+			var ctx;
+			var xPosition = 0;//змінна
+			var yPosition = 0;//змінна
+			var speed = 100;//нова рамка кожні 50 мілісекунд
+			var width = 500;//ширина
+			var height = 500;//висота
+
+
+
+			var blockSize = 10;//величина блоків
+
+			//ініціалізація тіла змійки
+			var posArray = []; //двохвимірний масив
+			posArray.push([6, 4]);//додали в масив - масив з координатами змійки
+			posArray.push([5, 4]);
+			posArray.push([4, 4]);
+			var direction = 'right';
+
+
+			function init() { //функція ініціації
+				$('body').append('<canvas id="jsSnake">');//вибираємо тіло і створюємо в ньому елемент канвасу
+				var $canvas = $('#jsSnake');//вибираємо щойно створений елемент за допомогою jquery
+				$canvas.attr('width', width);//задаємо ширину
+				$canvas.attr('height', height);//задаємо висоту
+				var canvas = $canvas[0];//витягнули канвас з масиву селектора
+				ctx = canvas.getContext('2d');//скорочення контексту
+
+				
+				gameLoop();//входимо в ігровий цикл
+			}
+
+			function gameLoop() {
+				ctx.fillStyle = "#000";
+				ctx.fillRect(0, 0, width, height);//очищення поля
+				go();//
+				draw(ctx);
+				setTimeout(gameLoop, speed); //
+			}
+
+			function drawSection(ctx, position) { //Малюємо частинку тіла
+				var x = blockSize * position[0];
+				var y = blockSize * position[1];
+				ctx.fillRect(x, y, blockSize, blockSize);
+			}
+
+			function draw(ctx) { //малюємо
+				ctx.save();
+
+				ctx.fillStyle = newColor();
+				for(var i = 0; i < posArray.length; i++) {
+					drawSection(ctx, posArray[i]);
+				}
+				ctx.restore()
+			}
+
+			function go() {
+				var nextPosition = posArray[0].slice(); //
+				nextPosition[0] += 1; //
+				posArray.unshift(nextPosition);
+				posArray.pop();
+			}
+			function newColor() {
+				var letters = '0123456789ABCDEF'.split('');
+    		var color = '#';
+    		for (var i = 0; i < 6; i++ ) {
+        	color += letters[Math.floor(Math.random() * 16)];
+    		}
+				return color;
+			}
+			$(document).ready(function () {
+				init();
+			});
+	  </script>
 	</body>
 	</html>
