@@ -88,7 +88,7 @@
 
 
 				posArray.unshift(nextPosition);
-				if(nextPosition[0] == apple[0]) {
+				if(nextPosition[0] == apple[0] && nextPosition[1] == apple[1]) {
 					createApple();
 				} else {
 					posArray.pop();
