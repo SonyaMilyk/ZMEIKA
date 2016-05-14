@@ -1,12 +1,156 @@
 <!DOCTYPE html>
-	<html>
-	 <head>
-	    <meta charset="utf-8">
-	   <title>ZMEJKA</title>
-	 </head>
-	<body>
-	  <h1>Snake game</h2>
-	  <p>It's our first project</p>
-	  <p>That called "ZMEJKA"</P>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
+
+<body>
+	  <script>
+			var ctx;
+			var xPosition = 0;//змінна
+			var yPosition = 0;//змінна
+			var speed = 100;//нова рамка кожні 50 мілісекунд
+			var width = $(window).width();
+			var height = $(window).height();//висота
+
+			direction = 'right';//стартовий напрямок
+
+			var blockSize = 10;//величина блоків
+			var	apple = [5,5];
+			//ініціалізація тіла змійки
+			var posArray = []; //двохвимірний масив
+			posArray.push([6, 4]);//додали в масив - масив з координатами змійки
+			posArray.push([5, 4]);
+			posArray.push([4, 4]);
+			posArray.push([3, 4]);
+			posArray.push([2, 4]);
+			posArray.push([1, 4]);
+			posArray.push([0, 4]);
+
+			var direction = 'down';
+
+
+			function init() { //функція ініціації
+				$('body').append('<canvas id="jsSnake">');//вибираємо тіло і створюємо в ньому елемент канвасу
+				var $canvas = $('#jsSnake');//вибираємо щойно створений елемент за допомогою jquery
+				$canvas.attr('width', width);//задаємо ширину
+				$canvas.attr('height', height);//задаємо висоту
+				var canvas = $canvas[0];//витягнули канвас з масиву селектора
+				ctx = canvas.getContext('2d');//скорочення контексту
+
+				bindEvents();
+				gameLoop();//входимо в ігровий цикл
+			}
+
+			function gameLoop() {
+				ctx.fillStyle = "#000";
+				ctx.fillRect(0, 0, width, height);//очищення поля
+				go();//
+				draw(ctx);
+				setTimeout(gameLoop, speed); //
+			}
+
+			function drawSection(ctx, position) { //Малюємо частинку тіла
+				var x = blockSize * position[0];
+				var y = blockSize * position[1];
+				ctx.fillRect(x, y, blockSize, blockSize);
+			}
+
+			function draw(ctx) { //малюємо
+				ctx.save();
+
+				ctx.fillStyle = newColor();
+				for(var i = 0; i < posArray.length; i++) {
+					drawSection(ctx, posArray[i]);
+				}
+				ctx.fillStyle = newColor();
+				drawSection(ctx, apple);
+				ctx.restore()
+			}
+
+			function go() {
+
+				var nextPosition = posArray[0].slice(); //
+
+
+				if (direction == "down") {
+						nextPosition[1] += 1;//напрямок вниз
+				} else if(direction == "left") {
+						nextPosition[0] += 1; //напрямок вліво
+				} else if (direction == "up") {
+						nextPosition[1] -= 1;
+				} else if (direction == "right") {
+						nextPosition[0] -= 1;
+				}
+
+
+
+				posArray.unshift(nextPosition);
+				if(nextPosition[0] == apple[0]) {
+					createApple();
+				} else {
+					posArray.pop();
+
+				}
+			}
+			function newColor() {
+				var letters = '0123456789ABCDEF'.split('');
+    		var color = '#';
+    		for (var i = 0; i < 6; i++ ) {
+        	color += letters[Math.floor(Math.random() * 16)];
+    		}
+				return color;
+			}
+
+			function bindEvents() {// бінд клавіш на напрямки змії
+				var keysToDirections = {
+					39: 'left',
+					38: 'up',
+					37: 'right',
+					40: 'down'
+				};
+
+				$(document).keydown(function (event) {
+					var key = event.which;
+					var newDirection = keysToDirections[key];
+
+					if (newDirection) {
+						setDirection(newDirection);
+
+						event.preventDefault();
+					}
+					// else if (key === 32) {
+					// 	restart();
+					// }
+				});
+			};
+			function setDirection(newDirection){
+				if ((direction == "right") && (newDirection != "left") ||
+					(direction == "left") && (newDirection != "right") ||
+					(direction == "up") && (newDirection != "down") ||
+					(direction == "down") && (newDirection != "up")){
+							direction = newDirection;
+				};
+			}
+
+			function createApple () {
+					var min = 0, max = width/blockSize;
+					apple = [Math.floor(Math.random() * (max - min)) + min,Math.floor(Math.random() * (max - min)) + min]
+			};
+
+			function drawApple () {
+
+			};
+
+			function eatApple () {
+
+			}
+
+			$(document).ready(function () {
+				init();
+			});
+	  </script>
 	</body>
 	</html>
